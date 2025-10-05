@@ -1,0 +1,230 @@
+{
+  "dashboardStats": [
+    {
+      "label": "DOCUMENTS READ",
+      "value": "1,247",
+      "description": "THIS MONTH",
+      "intent": "positive",
+      "icon": "gear",
+      "direction": "up"
+    },
+    {
+      "label": "MINUTES SAVED",
+      "value": "3,840'",
+      "description": "THROUGH AI-ASSISTED SEARCH",
+      "intent": "positive",
+      "icon": "proccesor",
+      "direction": "up"
+    },
+    {
+      "label": "ACCIDENTS",
+      "value": "0",
+      "description": "THE CLIENT ALWAYS IS RIGHT",
+      "intent": "neutral",
+      "icon": "boom",
+      "tag": "4 weeks 🔥"
+    },
+    {
+      "label": "ACTIVE USERS",
+      "value": "156",
+      "description": "CURRENTLY ONLINE",
+      "intent": "positive",
+      "icon": "gear",
+      "direction": "up"
+    }
+  ],
+  "chartData": {
+    "week": [
+      {
+        "date": "06/07",
+        "minutesSaved": 450,
+        "documentsProcessed": 180,
+        "queriesHandled": 320
+      },
+      {
+        "date": "07/07",
+        "minutesSaved": 520,
+        "documentsProcessed": 210,
+        "queriesHandled": 380
+      },
+      {
+        "date": "08/07",
+        "minutesSaved": 480,
+        "documentsProcessed": 195,
+        "queriesHandled": 340
+      },
+      {
+        "date": "09/07",
+        "minutesSaved": 610,
+        "documentsProcessed": 245,
+        "queriesHandled": 420
+      },
+      {
+        "date": "10/07",
+        "minutesSaved": 390,
+        "documentsProcessed": 160,
+        "queriesHandled": 280
+      },
+      {
+        "date": "11/07",
+        "minutesSaved": 550,
+        "documentsProcessed": 220,
+        "queriesHandled": 390
+      },
+      {
+        "date": "12/07",
+        "minutesSaved": 680,
+        "documentsProcessed": 270,
+        "queriesHandled": 460
+      },
+      {
+        "date": "13/07",
+        "minutesSaved": 420,
+        "documentsProcessed": 170,
+        "queriesHandled": 300
+      }
+    ],
+    "month": [
+      { "date": "Jan", "minutesSaved": 2100, "documentsProcessed": 850, "queriesHandled": 1500 },
+      { "date": "Feb", "minutesSaved": 1950, "documentsProcessed": 780, "queriesHandled": 1400 },
+      { "date": "Mar", "minutesSaved": 2450, "documentsProcessed": 980, "queriesHandled": 1750 },
+      { "date": "Apr", "minutesSaved": 2200, "documentsProcessed": 890, "queriesHandled": 1580 },
+      { "date": "May", "minutesSaved": 2800, "documentsProcessed": 1120, "queriesHandled": 2000 },
+      { "date": "Jun", "minutesSaved": 1850, "documentsProcessed": 740, "queriesHandled": 1320 },
+      { "date": "Jul", "minutesSaved": 2600, "documentsProcessed": 1040, "queriesHandled": 1860 },
+      { "date": "Aug", "minutesSaved": 2350, "documentsProcessed": 940, "queriesHandled": 1680 },
+      { "date": "Sep", "minutesSaved": 2500, "documentsProcessed": 1000, "queriesHandled": 1790 },
+      { "date": "Oct", "minutesSaved": 2150, "documentsProcessed": 860, "queriesHandled": 1540 },
+      { "date": "Nov", "minutesSaved": 2750, "documentsProcessed": 1100, "queriesHandled": 1970 },
+      { "date": "Dec", "minutesSaved": 3100, "documentsProcessed": 1240, "queriesHandled": 2220 }
+    ],
+    "year": [
+      {
+        "date": "2020",
+        "minutesSaved": 18500,
+        "documentsProcessed": 7400,
+        "queriesHandled": 13200
+      },
+      {
+        "date": "2021",
+        "minutesSaved": 21200,
+        "documentsProcessed": 8480,
+        "queriesHandled": 15150
+      },
+      {
+        "date": "2022",
+        "minutesSaved": 26800,
+        "documentsProcessed": 10720,
+        "queriesHandled": 19150
+      },
+      {
+        "date": "2023",
+        "minutesSaved": 24500,
+        "documentsProcessed": 9800,
+        "queriesHandled": 17500
+      },
+      { "date": "2024", "minutesSaved": 28900, "documentsProcessed": 11560, "queriesHandled": 20650 }
+    ]
+  },
+  "departmentActivity": [
+    {
+      "id": 1,
+      "name": "POLICY DIVISION",
+      "handle": "@POLICY",
+      "streak": "MOST ACTIVE THIS WEEK 🔥",
+      "points": 342,
+      "avatar": "/avatars/user_krimson.png",
+      "featured": true,
+      "subtitle": "MOST ACTIVE THIS WEEK 🔥"
+    },
+    {
+      "id": 2,
+      "name": "REGULATIONS",
+      "handle": "@REGULATIONS",
+      "streak": "",
+      "points": 287,
+      "avatar": "/avatars/user_mati.png"
+    },
+    {
+      "id": 3,
+      "name": "SCHEMES",
+      "handle": "@SCHEMES",
+      "streak": "",
+      "points": 219,
+      "avatar": "/avatars/user_pek.png"
+    },
+    {
+      "id": 4,
+      "name": "PROJECTS",
+      "handle": "@PROJECTS",
+      "streak": "",
+      "points": 156,
+      "avatar": "/avatars/user_joyboy.png"
+    }
+  ],
+  "systemStatus": [
+    {
+      "title": "AI SEARCH ENGINE",
+      "value": "ONLINE",
+      "status": "[RUNNING...]",
+      "variant": "success"
+    },
+    {
+      "title": "DOCUMENT INDEXING",
+      "value": "99.8%",
+      "status": "[SYNCED]",
+      "variant": "success"
+    },
+    {
+      "title": "PENDING UPLOADS",
+      "value": "23",
+      "status": "[PROCESSING]",
+      "variant": "warning"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "title": "DOCUMENT PROCESSED",
+      "message": "Policy Framework 2024.pdf has been successfully indexed and is ready for search.",
+      "timestamp": "2024-07-10T13:39:00Z",
+      "type": "success",
+      "read": false,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-2",
+      "title": "DOCUMENT PROCESSING FAILED",
+      "message": "Unable to process Regulation_Draft.docx - File format not supported.",
+      "timestamp": "2024-07-10T13:35:00Z",
+      "type": "error",
+      "read": false,
+      "priority": "high"
+    },
+    {
+      "id": "notif-3",
+      "title": "BATCH UPLOAD COMPLETE",
+      "message": "Successfully processed 47 documents from Higher Education Schemes folder.",
+      "timestamp": "2024-07-10T12:15:00Z",
+      "type": "success",
+      "read": true,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-4",
+      "title": "DOCUMENT READY",
+      "message": "National Education Policy 2023.pdf is now searchable in the system.",
+      "timestamp": "2024-07-10T11:45:00Z",
+      "type": "info",
+      "read": true,
+      "priority": "low"
+    }
+  ],
+  "widgetData": {
+    "location": "New Delhi, India",
+    "timezone": "UTC+5:30",
+    "temperature": "32°C",
+    "weather": "Partly Cloudy",
+    "date": "Wednesday, July 10th, 2025"
+  }
+}
