@@ -198,6 +198,65 @@ export class NotificationService {
   }
 
   /**
+   * Create notification for document processing
+   */
+  static async notifyDocumentProcessed(userId: string, fileName: string): Promise<void> {
+    await this.createNotification(
+      userId,
+      'success',
+      'DOCUMENT PROCESSED',
+      `${fileName} has been successfully indexed and is ready for search.`
+    )
+  }
+
+  /**
+   * Create notification for batch upload
+   */
+  static async notifyBatchUpload(userId: string, count: number, folderName: string): Promise<void> {
+    await this.createNotification(
+      userId,
+      'success',
+      'BATCH UPLOAD COMPLETE',
+      `Successfully processed ${count} documents from ${folderName}.`
+    )
+  }
+
+  /**
+   * Create sample notifications for testing
+   */
+  static async createSampleNotifications(userId: string): Promise<void> {
+    const now = new Date();
+    
+    // Create a few sample notifications
+    await this.createNotification(
+      userId,
+      'success',
+      'PAYMENT RECEIVED',
+      'Your payment to Rampart Studio has been processed successfully.',
+      undefined,
+      undefined
+    );
+
+    await this.createNotification(
+      userId,
+      'info',
+      'INTRO: JOYCO STUDIO AND VO',
+      'About Us - We\'re a healthcare company focused on accessibility and innovation.',
+      undefined,
+      undefined
+    );
+
+    await this.createNotification(
+      userId,
+      'warning',
+      'SYSTEM UPDATE',
+      'Security patches have been applied to all guard bots.',
+      undefined,
+      undefined
+    );
+  }
+
+  /**
    * Format timestamp for display
    */
   static formatTimestamp(timestamp: string): string {

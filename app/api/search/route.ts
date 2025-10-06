@@ -53,23 +53,55 @@ If the query is unclear or requires additional context, ask clarifying questions
 
     const userPrompt = `${query}${fileContext}`
 
-    // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1500,
-      }),
-    })
+    // Call OpenAI API with timeout and better error handling
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 30000) // 30 second timeout
+
+    let response
+    try {
+      response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 1500,
+        }),
+        signal: controller.signal,
+      })
+    } catch (fetchError: any) {
+      clearTimeout(timeoutId)
+      console.error('Network error connecting to OpenAI:', fetchError)
+      
+      // Provide more specific error messages
+      if (fetchError.name === 'AbortError') {
+        return NextResponse.json(
+          { error: 'Request timeout - OpenAI API took too long to respond' },
+          { status: 504 }
+        )
+      }
+      
+      if (fetchError.code === 'ENOTFOUND' || fetchError.cause?.code === 'ENOTFOUND') {
+        return NextResponse.json(
+          { error: 'Cannot connect to OpenAI API. Please check your internet connection or network settings.' },
+          { status: 503 }
+        )
+      }
+      
+      return NextResponse.json(
+        { error: `Network error: ${fetchError.message}` },
+        { status: 503 }
+      )
+    }
+    
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       const error = await response.json()

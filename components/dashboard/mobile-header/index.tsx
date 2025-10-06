@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,13 +9,40 @@ import MonkeyIcon from "@/components/icons/monkey";
 import MobileNotifications from "@/components/dashboard/notifications/mobile-notifications";
 import type { MockData } from "@/types/dashboard";
 import BellIcon from "@/components/icons/bell";
+import { useAuth } from "@/lib/auth-context";
+import { NotificationService } from "@/lib/notification-service";
 
 interface MobileHeaderProps {
   mockData: MockData;
 }
 
 export function MobileHeader({ mockData }: MobileHeaderProps) {
-  const unreadCount = mockData.notifications.filter((n) => !n.read).length;
+  const { user } = useAuth();
+  const [unreadCount, setUnreadCount] = React.useState(0);
+
+  React.useEffect(() => {
+    if (user) {
+      loadUnreadCount();
+      
+      // Poll for unread count every 30 seconds
+      const interval = setInterval(() => {
+        loadUnreadCount();
+      }, 30000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const loadUnreadCount = async () => {
+    if (!user) return;
+    
+    try {
+      const count = await NotificationService.getUnreadCount(user.uid);
+      setUnreadCount(count);
+    } catch (error) {
+      console.error('Failed to load unread count:', error);
+    }
+  };
 
   return (
     <div className="lg:hidden h-header-mobile sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -49,9 +78,7 @@ export function MobileHeader({ mockData }: MobileHeaderProps) {
             side="right"
             className="w-[80%] max-w-md p-0"
           >
-            <MobileNotifications
-              initialNotifications={mockData.notifications}
-            />
+            <MobileNotifications />
           </SheetContent>
         </Sheet>
       </div>

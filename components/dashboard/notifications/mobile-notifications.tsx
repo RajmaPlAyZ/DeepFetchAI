@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Bullet } from "@/components/ui/bullet";
 import { AnimatePresence, motion, PanInfo } from "motion/react";
@@ -8,9 +8,11 @@ import NotificationItem from "./notification-item";
 import type { Notification } from "@/types/dashboard";
 import { SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useIsV0 } from "@/lib/v0-context";
+import { NotificationService } from "@/lib/notification-service";
+import { useAuth } from "@/lib/auth-context";
 
 interface MobileNotificationsProps {
-  initialNotifications: Notification[];
+  initialNotifications?: Notification[];
 }
 
 interface SwipeableWrapperProps {
@@ -50,23 +52,66 @@ function SwipeableWrapper({ children, onDelete }: SwipeableWrapperProps) {
 }
 
 export default function MobileNotifications({
-  initialNotifications,
+  initialNotifications = [],
 }: MobileNotificationsProps) {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
-
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const isV0 = useIsV0();
+
+  useEffect(() => {
+    if (user) {
+      loadNotifications();
+      
+      // Poll for new notifications every 30 seconds
+      const interval = setInterval(() => {
+        loadNotifications();
+      }, 30000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const loadNotifications = async () => {
+    if (!user) return;
+    
+    try {
+      const userNotifications = await NotificationService.getUserNotifications(user.uid);
+      // Convert Firebase notifications to dashboard notification format
+      const formattedNotifications: Notification[] = userNotifications.map(notif => ({
+        id: notif.id,
+        title: notif.title,
+        message: notif.message,
+        timestamp: notif.timestamp,
+        type: notif.type as "info" | "warning" | "success" | "error",
+        read: notif.read,
+        priority: "medium" as "low" | "medium" | "high"
+      }));
+      setNotifications(formattedNotifications);
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    }
+  };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
-    );
+  const markAsRead = async (id: string) => {
+    try {
+      await NotificationService.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
+      );
+    } catch (error) {
+      console.error('Failed to mark as read:', error);
+    }
   };
 
-  const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  const deleteNotification = async (id: string) => {
+    try {
+      await NotificationService.deleteNotification(id);
+      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+    }
   };
 
   return (

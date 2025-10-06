@@ -1,7 +1,7 @@
 import Chat from "@/components/chat";
 import { MobileChat } from "@/components/chat/mobile-chat";
 import { MobileHeader } from "@/components/dashboard/mobile-header";
-import Notifications from "@/components/dashboard/notifications";
+import Notifications from "@/components/dashboard/notifications/index";
 import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import Widget from "@/components/dashboard/widget";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -73,9 +73,7 @@ export default function RootLayout({
               <div className="col-span-3 hidden lg:block">
                 <div className="space-y-gap py-sides min-h-screen max-h-screen sticky top-0 overflow-clip">
                   <Widget widgetData={mockData.widgetData} />
-                  <Notifications
-                    initialNotifications={mockData.notifications}
-                  />
+                  <Notifications />
                   <Chat />
                 </div>
               </div>

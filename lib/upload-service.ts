@@ -1,6 +1,7 @@
 import { collection, deleteDoc, doc, getDocs, orderBy, query, setDoc } from 'firebase/firestore'
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, storage } from './firebase'
+import { NotificationService } from './notification-service'
 
 export interface UploadedFile {
   id: string
@@ -42,6 +43,13 @@ export class UploadService {
     }
     
     await setDoc(doc(db, 'uploads', snapshot.ref.name), fileData)
+    
+    // Create notification for successful upload
+    try {
+      await NotificationService.notifyDocumentProcessed(userId, file.name)
+    } catch (error) {
+      console.error('Failed to create notification:', error)
+    }
     
     return fileData
   }

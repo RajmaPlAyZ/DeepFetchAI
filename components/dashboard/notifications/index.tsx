@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,35 +8,92 @@ import { Bullet } from "@/components/ui/bullet";
 import NotificationItem from "./notification-item";
 import type { Notification } from "@/types/dashboard";
 import { AnimatePresence, motion } from "framer-motion";
+import { NotificationService } from "@/lib/notification-service";
+import { useAuth } from "@/lib/auth-context";
 
 interface NotificationsProps {
-  initialNotifications: Notification[];
+  initialNotifications?: Notification[];
 }
 
 export default function Notifications({
-  initialNotifications,
+  initialNotifications = [],
 }: NotificationsProps) {
-  const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
+  const { user } = useAuth();
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [showAll, setShowAll] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadNotifications();
+      
+      // Poll for new notifications every 30 seconds
+      const interval = setInterval(() => {
+        loadNotifications();
+      }, 30000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const loadNotifications = async () => {
+    if (!user) return;
+    
+    try {
+      const userNotifications = await NotificationService.getUserNotifications(user.uid);
+      // Convert Firebase notifications to dashboard notification format
+      const formattedNotifications: Notification[] = userNotifications.map(notif => ({
+        id: notif.id,
+        title: notif.title,
+        message: notif.message,
+        timestamp: notif.timestamp,
+        type: notif.type as "info" | "warning" | "success" | "error",
+        read: notif.read,
+        priority: "medium" as "low" | "medium" | "high"
+      }));
+      setNotifications(formattedNotifications);
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    }
+  };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
   const displayedNotifications = showAll
     ? notifications
     : notifications.slice(0, 3);
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
-    );
+  const markAsRead = async (id: string) => {
+    try {
+      await NotificationService.markAsRead(id);
+      setNotifications((prev) =>
+        prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif))
+      );
+    } catch (error) {
+      console.error('Failed to mark as read:', error);
+    }
   };
 
-  const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  const deleteNotification = async (id: string) => {
+    try {
+      await NotificationService.deleteNotification(id);
+      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+    }
   };
 
-  const clearAll = () => {
-    setNotifications([]);
+  const clearAll = async () => {
+    if (!user) return;
+    
+    try {
+      setLoading(true);
+      await NotificationService.deleteAllNotifications(user.uid);
+      setNotifications([]);
+    } catch (error) {
+      console.error('Failed to clear all notifications:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,8 +109,9 @@ export default function Notifications({
             size="sm"
             variant="ghost"
             onClick={clearAll}
+            disabled={loading}
           >
-            Clear All
+            {loading ? "Clearing..." : "Clear All"}
           </Button>
         )}
       </CardHeader>
